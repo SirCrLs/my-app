@@ -6,7 +6,7 @@ import Alumno from "./Alumno";
 
 function Seccion({ titulo, lista, onToggle }) {
   return (
-    <section className="mb-8">
+    <section className={lista.length === 0 ? "oculto" : "mb-8"}>
       <h2 className="mb-2 text-xl font-semibold">
         {titulo} ({lista.length})
       </h2>
@@ -15,22 +15,15 @@ function Seccion({ titulo, lista, onToggle }) {
           <tr className="border-b-2 border-gray-300">
             <th className="p-3">Nombre</th>
             <th className="p-3">Apellido</th>
+            <th className="p-3">Calificacion</th>
             <th className="p-3">Estatus</th>
             <th className="p-3">Regular</th>
           </tr>
         </thead>
         <tbody>
-          {lista.length === 0 ? (
-            <tr>
-              <td colSpan={4} className="p-3 text-gray-500">
-                No hay alumnos en esta sección.
-              </td>
-            </tr>
-          ) : (
-            lista.map((alumno) => (
-              <Alumno key={alumno.id} alumno={alumno} onToggle={onToggle} />
-            ))
-          )}
+          {lista.map((alumno) => (
+            <Alumno key={alumno.id} alumno={alumno} onToggle={onToggle} />
+          ))}
         </tbody>
       </table>
     </section>
@@ -42,6 +35,7 @@ export default function TablaAlumnos() {
   const [mostrarForm, setMostrarForm] = useState(false);
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
+  const [calificacion, setCalificacion] = useState("");
   const [regular, setRegular] = useState(true);
 
   function handleToggle(id) {
@@ -52,18 +46,20 @@ export default function TablaAlumnos() {
 
   function handleAgregar(e) {
     e.preventDefault();
-    if (!nombre.trim() || !apellido.trim()) return;
+    if (!nombre.trim() || !apellido.trim() || calificacion === "") return;
 
     const nuevoAlumno = {
       id: Date.now(),
       nombre: nombre.trim(),
       apellido: apellido.trim(),
+      calificacion: Number(calificacion),
       regular,
     };
 
     setAlumnos([...alumnos, nuevoAlumno]);
     setNombre("");
     setApellido("");
+    setCalificacion("");
     setRegular(true);
     setMostrarForm(false);
   }
@@ -76,8 +72,7 @@ export default function TablaAlumnos() {
       <div className="mb-4 flex justify-end">
         <button
           onClick={() => setMostrarForm(!mostrarForm)}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-        >
+          className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
           {mostrarForm ? "Cancelar" : "Agregar alumno"}
         </button>
       </div>
@@ -92,27 +87,32 @@ export default function TablaAlumnos() {
             placeholder="Nombre"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            className="rounded border border-gray-300 p-2"
-          />
+            className="rounded border border-gray-300 p-2"/>
           <input
             type="text"
             placeholder="Apellido"
             value={apellido}
             onChange={(e) => setApellido(e.target.value)}
-            className="rounded border border-gray-300 p-2"
-          />
+            className="rounded border border-gray-300 p-2" />
+            <input
+              type="number"
+              min="0"
+              max="100"
+              placeholder="Calificación"
+              value={calificacion}
+              onChange={(e) => setCalificacion(e.target.value)}
+              className="rounded border border-gray-300 p-2"
+            />
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
               checked={regular}
-              onChange={(e) => setRegular(e.target.checked)}
-            />
+              onChange={(e) => setRegular(e.target.checked)}/>
             Alumno regular
           </label>
           <button
             type="submit"
-            className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
-          >
+            className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700">
             Guardar
           </button>
         </form>
