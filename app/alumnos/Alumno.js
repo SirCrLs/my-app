@@ -1,8 +1,6 @@
-export default function Alumno({ alumno, onToggle }) {
-  const ocultar = alumno.calificacion < 70;
-
+export default function Alumno({ alumno, onToggle, visible }) {
   return (
-    <tr className={ocultar ? "oculto" : "border-b border-gray-200"}>
+    <tr className={visible ? "border-b border-gray-200" : "oculto"}>
       <td className="p-3">{alumno.nombre}</td>
       <td className="p-3">{alumno.apellido}</td>
       <td className="p-3">{alumno.calificacion}</td>
